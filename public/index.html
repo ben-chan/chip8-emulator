@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <script src="jquery.js"></script>
+
+    <script src="chip8.js"></script>
+
+</head> 
+
+<body>
+    Chip 8 Emulator (Ben Chan)
+    <br>
+    Speed
+    <select id="speed">
+        <option value="10" selected>10(default)</option>
+
+        <option value="11">11</option>
+        <option value="12">12</option>
+        <option value="13">13</option>
+        <option value="14">14</option>        
+        <option value="15">15</option>
+        
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>        
+        <option value="9">9</option>
+
+    </select>
+    Rom list
+    <select id="rom_list">
+        <option value="" selected></option>
+        <option value="INVADERS">INVADERS</option>
+        <option value="15PUZZLE">15PUZZLE</option>
+        <option value="TANK">TANK</option>
+        <option value="PONG">PONG</option>
+        <option value="PONG2">PONG2</option>        
+        <option value="UFO">UFO</option>
+        <option value="PUZZLE">PUZZLE</option>
+        <option value="CONNECT4">CONNECT4</option>
+        <option value="MAZE">MAZE</option>
+        <option value="TETRIS">TETRIS</option>
+        <option value="MISSILE">MISSILE</option>
+        <option value="TICTAC">TICTAC</option>
+        <option value="VBRIX">VBRIX</option>
+        <option value="VERS">VERS</option>
+        <option value="WIPEOFF">WIPEOFF</option>
+        <option value="HIDDEN">HIDDEN</option>
+        <option value="MERLIN">MERLIN</option>
+        <option value="BLITZ">BLITZ</option>
+        <option value="BLINKY">MERLIN</option>
+        <option value="GUESS">GUESS</option>
+        <option value="KALEID">KALEID</option>
+        <option value="SYZYGY">SYZYGY</option>
+    </select>
+    Keys=1,2,3,4,q,w,e,r,a,s,d,f,z,x,c,v
+    <br/>
+    <canvas id="game-screen" width="640" height="320" style="border:1px solid #000000;">
+    </canvas>
+
+    <script type="text/javascript">
+        
+var chip8=new Chip8(document.getElementById("game-screen"));
+$( document ).ready(function() {
+    $("#rom_list").change(function(event){
+    var rom_name=$("#rom_list").val();
+    var oReq = new XMLHttpRequest();
+    oReq.open("GET", "roms/"+rom_name, true);
+    oReq.responseType = "arraybuffer";
+
+    oReq.onload = function (oEvent) {
+        var arrayBuffer = oReq.response; // Note: not oReq.responseText
+        if (arrayBuffer) {
+            var byteArray = new Uint8Array(arrayBuffer);
+            var speed=parseInt($("#speed").val());
+            chip8.start_emulate(byteArray,speed);
+        }
+    };
+    oReq.send(null);
+});
+});
+//oReq.open("GET", "roms/random_number.ch8", true);
+
+$(document).keydown(function(event){     
+    if ((event.which >= 49 && event.which >= 57) || true){  
+        chip8.on_key_pressed(event.which);
+    }
+});
+
+$(document).keyup(function(event){     
+    if ((event.which >= 49 && event.which >= 57) || true){   
+        chip8.on_key_released(event.which);
+    }
+});
+    </script>
+
+</body>
+
+</html>

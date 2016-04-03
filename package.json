@@ -1,0 +1,6 @@
+{
+  "name": "chi8-romloader",
+  "dependencies": {
+    "express": "^4.13.4"
+  }
+}
